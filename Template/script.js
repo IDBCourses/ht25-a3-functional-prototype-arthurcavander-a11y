@@ -2,9 +2,10 @@
 
 //game settings 
 const PLAYER_SPEED = 8;
-const BOX_SPEED = 20;
+const BOX_SPEED = 2;
 const SIZE = 70;
-const DASH_DISTANCE = 60;
+const MOVE_AMOUNT = 40;
+
 
 // state contains all the moving parts 
 let state = {
@@ -14,12 +15,11 @@ boxX: 200,
 boxY: 0,
 score: 0,
 isRunning: true,
-keyLeft: false,
-keyRight: false,
 keySpace: false,
 shieldActive: false,
 shieldTime: 0,
-shieldUsed: false
+shieldUsed: false,
+lastKey:null,
 };
 
 // settings object contains all fixed parts
@@ -32,31 +32,44 @@ shieldTimerElement: document.getElementById('shieldTimer'),
 starContainerElement: document.getElementById('starContainer')
 };
 
-// dash left when Q is tapped
-function dashLeft() {
-state.playerX -= DASH_DISTANCE;
+const keySequence = ['q','w','e','r','t','y','u','i','o','p'];
 
-if (state.playerX < 0) {
-state.playerX = 0;
+function getKeyIndex(key){
+  return keySequence.indexOf(key);
 }
 
-settings.playerElement.style.left = state.playerX + 'px';
+function handleKeyMovement(key){
+  if(!state.isRunning) return;
+
+  let currentIndex = getKeyIndex(key);
+  if (currentIndex === -1) return;
+if(state.lastKey=== null) {
+  state.lastKey= key;
+  return;
+}
+let lastIndex = getKeyIndex(state.lastKey);
+
+if (currentIndex > lastIndex) {
+  state.playerX += MOVE_AMOUNT;
+  if (state.playerX > window.innerWidth- SIZE) {
+    state.playerX = window.innerWidth - SIZE;
+}
+settings.playerElement.style.left= state.playerX + 'px';
 }
 
-// dash right when P is tapped
-function dashRight() {
-state.playerX += DASH_DISTANCE;
-
-if (state.playerX > window.innerWidth - SIZE) {
- state.playerX = window.innerWidth - SIZE;
+else if (currentIndex < lastIndex){
+  state.playerX -=MOVE_AMOUNT;
+  if(state.playerX < 0){
+  state.playerX = 0;
+  }
+  settings.playerElement.style.left = state.playerX + 'px';
 }
 
-settings.playerElement.style.left = state.playerX + 'px';
+state.lastKey = key;
 }
-
 //check for shield activation
 function checkShield() {
-if (state.keyLeft && state.keyRight && state.keySpace && !state.shieldUsed) {
+if(!state.shieldUsed){
 state.shieldActive = true;
 state.shieldTime = 180;
 state.shieldUsed = true;
@@ -141,7 +154,7 @@ state.shieldActive = false;
 state.shieldTime = 0;
 state.shieldUsed = false;
 settings.scoreElement.textContent = 'score: 0';
-settings.messageElement.textContent = 'Use q to dodge left and use p to dodge right';
+settings.messageElement.textContent = 'Drag q>p to move right, p>q to move left';
 settings.shieldTimerElement.textContent = '';
 }
 
@@ -162,20 +175,22 @@ settings.starContainerElement.innerHTML = starsHTML;
 
 //key press handlers 
 function keyDown(event) {
-if (event.key === 'q') {
-state.keyLeft = true;
-if (state.isRunning) {
-dashLeft();
-}
-}
-if (event.key === 'p') {
-state.keyRight = true;
-if (state.isRunning) {
-dashRight();}
-}
-if (event.key === 'r' && !state.isRunning) {
+   let key = event.key.toLowerCase();
+  
+   if(key === 's' && state.isRunning){
+    checkShield();
+  }
+  
+ 
+
+  if(keySequence.indexOf(key) !== -1) {
+    handleKeyMovement(key);
+  }
+
+if (event.key === ' ' && !state.isRunning) {
 restartGame();
 }
+
 if (event.key === ' ') {
  event.preventDefault();
 state.keySpace = true;
@@ -183,21 +198,16 @@ state.keySpace = true;
 }
 
 function keyUp(event) {
-if (event.key === 'q') {
-state.keyLeft = false;
-}
-if (event.key === 'p') {
-state.keyRight = false;
-}
-if (event.key === ' ') {
-state.keySpace = false;
+let key = event.key.toLowerCase();
+
+if (keySequence.indexOf(key) !== -1){
+  state.lastKey=null;
 }
 }
 
 // update function 
 function update() {
 if (state.isRunning) {
-checkShield();
 moveBox();
 
 if (state.shieldActive && state.shieldTime > 0) {
