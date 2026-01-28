@@ -1,28 +1,64 @@
-.thing {
-    width: 100px;
-    height: 100px;
-    background-color: deeppink;
-    position: absolute;
-    border-radius: 50%;
+*{
+margin:0;
+padding:0;
+box-sizing:border-box ;
 }
-
-/* Prevent padding and border from affecting element width. */
-*,
-::before,
-::after {
-    box-sizing: border-box;
-}
-
-/* Remove the margin in all browsers */
 body {
-    margin: 0;
-    padding: 0;
-    line-height: inherit;
-    font-family: system-ui, -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, 'Open Sans', 'Helvetica Neue', sans-serif;
+background-color:midnightblue;
+font-family: fantasy;
+overflow:hidden ;
+height:100vh ;
 }
-
-#sample-output {
-    position: fixed;
-    border-radius: 100%;
-    background-color: orange;
+#starContainer {
+position: absolute;
+width: 100%;
+height: 100%;
+}
+.star {
+position: absolute;
+background-color: white;
+border-radius: 50%;
+opacity: 0.8;
+}
+#score{
+position: fixed;
+top: 20px;
+left:20px;
+color: rgb(255, 255, 255);
+font-size: 30px;
+font-weight: bold;
+}
+#shieldTimer {
+position: fixed;
+top: 20px;
+right: 20px;
+color: gold;
+font-size: 24px;
+font-weight: bold;
+}
+#message {
+position: fixed;
+top: 50%;
+left: 50%;
+transform: translate(-50%, -50%);
+color: white;
+text-align: center;
+}
+#player{
+width: 70px;
+height: 70px;
+background-color:deeppink ;
+position:absolute ;
+border-radius: 50%;
+bottom: 20px;
+left:300px;
+}
+#box{
+width: 70px; 
+height: 70px;
+background-color:aqua ;
+position: absolute;
+top: 0;
+left: 200px;
+border:2px solid aqua;
 }
