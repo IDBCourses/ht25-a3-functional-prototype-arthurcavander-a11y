@@ -5,16 +5,16 @@ and try to reach as high of score as possible.
 
 how to play
 1. Open the HTML document with live server
-2. Use q key to dash left and p key to dash right 
+2. Use p-q key to dash left and q-p key to dash right 
 3. Dodge the falling boxes 
 4. Each box you dodge is equal to 1 point
 5. If a box hits you it's game over and you will need to restart
 
 Controls
-q key dashes left 
-p key dashes right 
-hold q + p + spacebar together for shield
-r to restart game 
+Drag from q-p to move right 
+drag from p-q to move left 
+hold s for a shield (one time use)
+spaxcebar to restart game 
 
 Goal 
 Get as many points you can by avoiding boxes 

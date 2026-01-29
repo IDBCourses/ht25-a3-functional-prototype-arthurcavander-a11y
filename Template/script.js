@@ -1,11 +1,9 @@
 //Isac Cavander Avoid box game 
 
 //game settings 
-const PLAYER_SPEED = 8;
-const BOX_SPEED = 2;
+const PLAYER_SPEED = 10;
+const BOX_SPEED = 15;
 const SIZE = 70;
-const MOVE_AMOUNT = 40;
-
 
 // state contains all the moving parts 
 let state = {
@@ -20,6 +18,8 @@ shieldActive: false,
 shieldTime: 0,
 shieldUsed: false,
 lastKey:null,
+dragDirection:0,
+keysPressed:{}
 };
 
 // settings object contains all fixed parts
@@ -43,30 +43,25 @@ function handleKeyMovement(key){
 
   let currentIndex = getKeyIndex(key);
   if (currentIndex === -1) return;
-if(state.lastKey=== null) {
-  state.lastKey= key;
+
+  if(state.lastKey===null) {
+  state.lastKey=key;
   return;
 }
+
 let lastIndex = getKeyIndex(state.lastKey);
 
-if (currentIndex > lastIndex) {
-  state.playerX += MOVE_AMOUNT;
-  if (state.playerX > window.innerWidth- SIZE) {
-    state.playerX = window.innerWidth - SIZE;
-}
-settings.playerElement.style.left= state.playerX + 'px';
+if(currentIndex >lastIndex){
+  state.dragDirection=1;
+  state.lastKey=key;
 }
 
-else if (currentIndex < lastIndex){
-  state.playerX -=MOVE_AMOUNT;
-  if(state.playerX < 0){
-  state.playerX = 0;
-  }
-  settings.playerElement.style.left = state.playerX + 'px';
-}
-
+else if (currentIndex<lastIndex){
+  state.dragDirection= -1;
 state.lastKey = key;
 }
+}
+
 //check for shield activation
 function checkShield() {
 if(!state.shieldUsed){
@@ -153,6 +148,8 @@ state.boxY = 0;
 state.shieldActive = false;
 state.shieldTime = 0;
 state.shieldUsed = false;
+state.lastKey = null;
+state.dragDirection=0;
 settings.scoreElement.textContent = 'score: 0';
 settings.messageElement.textContent = 'Drag q>p to move right, p>q to move left';
 settings.shieldTimerElement.textContent = '';
@@ -176,13 +173,13 @@ settings.starContainerElement.innerHTML = starsHTML;
 //key press handlers 
 function keyDown(event) {
    let key = event.key.toLowerCase();
+
+   state.keysPressed[key]=true;
   
    if(key === 's' && state.isRunning){
     checkShield();
   }
   
- 
-
   if(keySequence.indexOf(key) !== -1) {
     handleKeyMovement(key);
   }
@@ -200,16 +197,41 @@ state.keySpace = true;
 function keyUp(event) {
 let key = event.key.toLowerCase();
 
+state.keysPressed[key]=false;
+
 if (keySequence.indexOf(key) !== -1){
-  state.lastKey=null;
+let anyKeyPressed=false;
+for(let i=0; i<keySequence.length; i++){
+if(state.keysPressed[keySequence[i]]){
+anyKeyPressed=true;
+break;
 }
 }
 
+if(!anyKeyPressed){
+  state.lastKey=null;
+  state.dragDirection=0;
+}
+}
+}
 // update function 
 function update() {
 if (state.isRunning) {
-moveBox();
+if(state.dragDirection===1){
+state.playerX +=PLAYER_SPEED
 
+}else if(state.dragDirection===-1){
+  state.playerX -=PLAYER_SPEED;
+}
+if (state.playerX<0) {
+  state.playerX=0;
+}
+if(state.playerX>window.innerWidth- SIZE ){
+  state.playerX = window.innerWidth-SIZE;
+}
+settings.playerElement.style.left=state.playerX + 'px';
+
+moveBox();
 if (state.shieldActive && state.shieldTime > 0) {
 for (let i = 0; i < 1; i++) {
 state.shieldTime = state.shieldTime - 1;
@@ -234,7 +256,7 @@ settings.playerElement.style.backgroundColor = 'deeppink';
 }
 if (state.shieldActive) {
 let seconds = Math.ceil(state.shieldTime / 60);
-settings.shieldTimerElement.textContent = 'shield: ' + seconds + 's';
+settings.shieldTimerElement.textContent = 'shield: ' + seconds + ' ';
 } else {
 settings.shieldTimerElement.textContent = '';
 }
