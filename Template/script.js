@@ -5,7 +5,7 @@ const PLAYER_SPEED = 10;
 const BOX_SPEED = 15;
 const SIZE = 70;
 
-// state contains all the moving parts 
+// state contains all the moving parts (objects)
 let state = {
 playerX: 300,
 playerY: window.innerHeight - 90,
