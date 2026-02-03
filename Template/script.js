@@ -181,10 +181,6 @@ function keyDown(event) {
 
    state.keysPressed[key]=true;
   
-   if(key === 's' && state.isRunning){
-    checkShield();
-  }
-  
   if(keySequence.indexOf(key) !== -1) {
     handleKeyMovement(key);
   }
