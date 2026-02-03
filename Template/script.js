@@ -63,8 +63,13 @@ state.lastKey = key;
 }
 
 //check for shield activation
+//to do add 3 keys pressed at the same time
 function checkShield() {
-if(!state.shieldUsed){
+  if(state.keysPressed['a'] &&
+  state.keysPressed['s'] &&
+state.keysPressed['d'] &&
+!state.shieldUsed &&
+state.isRunning) {
 state.shieldActive = true;
 state.shieldTime = 180;
 state.shieldUsed = true;
