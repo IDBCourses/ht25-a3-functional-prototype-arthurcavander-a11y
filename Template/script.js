@@ -155,7 +155,7 @@ state.shieldUsed = false;
 state.lastKey = null;
 state.dragDirection=0;
 settings.scoreElement.textContent = 'score: 0';
-settings.messageElement.textContent = 'Drag q>p to move right, p>q to move left';
+settings.messageElement.textContent = 'Drag q>p to move right, p>q to move left Use A+S+D for shield';
 settings.shieldTimerElement.textContent = '';
 }
 
