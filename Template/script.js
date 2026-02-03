@@ -63,7 +63,6 @@ state.lastKey = key;
 }
 
 //check for shield activation
-//to do add 3 keys pressed at the same time
 function checkShield() {
   if(state.keysPressed['a'] &&
   state.keysPressed['s'] &&
@@ -218,6 +217,7 @@ if(!anyKeyPressed){
 // update function 
 function update() {
 if (state.isRunning) {
+  checkShield();
 if(state.dragDirection===1){
 state.playerX +=PLAYER_SPEED
 
